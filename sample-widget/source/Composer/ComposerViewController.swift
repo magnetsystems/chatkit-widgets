@@ -7,13 +7,14 @@
 //
 
 import UIKit
+import WidgetKit
 
 class ComposerViewController: UIViewController {
 
-    private var _send:(([String : Any]) -> ())?
+    private var _send:((WidgetModel) -> ())?
     private var _cancel:(() -> ())?
     
-    init(send: @escaping ([String : Any]) -> (), cancel: @escaping () -> ()) {
+    init(send: @escaping (WidgetModel) -> (), cancel: @escaping () -> ()) {
         _send = send
         _cancel = cancel
         super.init(nibName: nil, bundle: nil);
@@ -37,7 +38,7 @@ class ComposerViewController: UIViewController {
     func send() {
         self.navigationController?.dismiss(animated: true, completion: nil);
         if let send = _send {
-            send(["text":"test"])
+            send(Model())
         }
     }
     

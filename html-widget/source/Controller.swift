@@ -9,24 +9,22 @@
 
 import UIKit
 import ChatKit
-import HTMLWidget
 
 let label = UILabel()
 
-public class Controller: NSObject, ChatKit.WidgetControlling, ChecklistViewDelegate {
+public class Controller: NSObject, ChatKit.WidgetControlling {
+    public var modelType:Message.Type = Model.self
+
 
     // MARK: - Private Properties
     var _messageInterface:MessageInterface?
     
     // MARK: - Properties
-    public var name = "Checklist"
-    public var modelType: WidgetModel.Type = Model.self
+    public var name = "HTMLWidget"
     
     // MARK: - Public Functions
     public func channelView() -> UIView {
-        let view = ChecklistView.checklistView()
-        view.delegate = self
-        return view
+        return UIView()
     }
     
     public func configureWithMessageInterface(messageInterface:MessageInterface) {
@@ -37,13 +35,7 @@ public class Controller: NSObject, ChatKit.WidgetControlling, ChecklistViewDeleg
         return WidgetChannelPresentation.Cell
     }
     
-    func widgetPresenterForSurface(surface:Protocol) -> AnyObject {
-        return self
-    }
-    
     public func configureChannelView(channelView:UIView, withMessage message:Message, presentingNavigationController navigationController:UINavigationController?) {
-        let message = message as! Model
-        
         let oTextView = channelView as? UILabel
         guard let textView = oTextView else {
             return;
@@ -61,7 +53,6 @@ public class Controller: NSObject, ChatKit.WidgetControlling, ChecklistViewDeleg
     }
     
     public func channelViewSizeForMessage(message: Message) -> CGSize {
-        let message = message as! Model
         
         return CGSize(width: 300, height: 49+34*3+23)
     }
@@ -73,10 +64,4 @@ public class Controller: NSObject, ChatKit.WidgetControlling, ChecklistViewDeleg
         let navController = UINavigationController(rootViewController: composerViewController)
         return navController
     }
-    // MARK: - ChecklistView Delegate
-    
-    func checklistView(checklistView:ChecklistView, didTapItemAtIndex index:Int) {
-        _messageInterface?.sendMessage(message: HTMLWidget.Model(json:["":""]))
-    }
-
 }

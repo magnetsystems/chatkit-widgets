@@ -8,39 +8,61 @@
 //
 
 import UIKit
-import ChatKit
+import WidgetKit
 
 let label = UILabel()
 
-public class Controller: NSObject, ChatKit.WidgetControlling {
-
-    // MARK: - Properties
-    public var name = "TextWidget"
+public class Controller: WidgetControllerBase, WidgetKit.ChannelWidgetPresenting {
     
-    // MARK: - Public Functions
-    public func channelView() -> UIView {
-        let view = UILabel()
-        view.font = UIFont.systemFont(ofSize: 14.0)
-        view.backgroundColor = UIColor.blue
-        return view
+    var _interactionInterface: WidgetInteractionInterface?
+    
+    override public func configureWithInteractionInterface(interactionInterface:WidgetInteractionInterface) {
+        _interactionInterface = interactionInterface
     }
-    
-    public func channelViewPresentation() -> WidgetChannelPresentation {
+
+    public override init() {
+        super.init()
+        name = "TextWidget"
+        modelType = Model.self
+        registerPresenter(presenter: self, forSurface:WidgetKit.WidgetSurface.Channel.rawValue)
+    }
+
+    // MARK: - ChannelWidgetPresenting
+
+    public func widgetViewPresentation() -> WidgetChannelPresentation {
         return WidgetChannelPresentation.Cell
     }
-    
-    public func configureChannelView(channelView:UIView, withData data:[String:Any], presentingNavigationController navigationController:UINavigationController?) {
-        let oTextView = channelView as? UILabel
+
+    public func widgetView() -> UIView {
+        let view = UILabel()
+        view.font = UIFont.systemFont(ofSize: 14.0)
+        view.textColor = UIColor.white
+        view.backgroundColor = UIColor.clear
+        return view
+    }
+
+    public func configureWidgetView(widgetView:UIView, withMessage message:WidgetMessage, presentingNavigationController navigationController:UINavigationController?) {
+        let oTextView = widgetView as? UILabel
         guard let textView = oTextView else {
             return;
         }
-        
-        textView.text = (data["text"] != nil) ? (data["text"] as? String) : ""
+        let model:Model? = message.widgetModel as? Model
+        let text:NSString = (model?.text ?? "") as NSString
+        textView.text = text as String
+
+        let size = textView.text?.size(attributes: [NSFontAttributeName : UIFont.systemFont(ofSize: 14.0)])
+        let frame = CGRect(x:0, y:0, width:(size?.width)!, height:(size?.height)!)
+        textView.sizeToFit()
     }
-    
-    public func channelViewSizeForData(data: [String : Any]) -> CGSize {
-        let text:NSString = ((data["text"] != nil) ? data["text"] : "") as! NSString
+
+    public func widgetViewSizeForMessage( message:WidgetMessage ) -> CGSize {
+        let model:Model? = message.widgetModel as? Model
+        let text:NSString = (model?.text ?? "") as NSString
         let size = text.size(attributes: [NSFontAttributeName : UIFont.systemFont(ofSize: 14.0)])
-        return CGSize(width: size.width + 10, height: 45)
+        return CGSize(width: size.width + 10, height: size.height + 10)
+    }
+
+    public func containerCellTypeForMessage( message:WidgetMessage ) -> WidgetContainerCell.Type {
+        return WidgetContainerCell.self
     }
 }

@@ -8,9 +8,14 @@
 
 import UIKit
 
+protocol ChecklistViewDelegate {
+    func checklistView(checklistView:ChecklistView, didTapItemAtIndex index:Int);
+}
+
 @available(iOS 9.0, *)
 class ChecklistView: UIView {
 
+    var delegate: ChecklistViewDelegate!
     @IBOutlet var title: UILabel!
     @IBOutlet var stack: UIStackView!
     
@@ -31,5 +36,8 @@ class ChecklistView: UIView {
         stack.addArrangedSubview(ChecklistItem.checklistItem())
         stack.addArrangedSubview(ChecklistItem.checklistItem())
         stack.addArrangedSubview(ChecklistItem.checklistItem())
+    }
+    @IBAction func testMessageSend(_ sender: Any) {
+        delegate.checklistView(checklistView: self, didTapItemAtIndex: 0)
     }
 }
