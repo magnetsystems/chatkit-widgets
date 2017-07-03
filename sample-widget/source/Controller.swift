@@ -30,13 +30,12 @@ public class Controller: WidgetControllerBase, WidgetKit.ChannelWidgetCreating, 
     // MARK: - ChannelWidgetPresenting
 
     func buttonPressed(message:WidgetMessage?) {
-        let model = message?.widgetModel as! Model
-        let newModel = Model()
-        newModel.value = (model.value ?? 0) + 1
-//        let message = WidgetMessage(json: nil, widgetModel: newModel)
-//        _interactionInterface?.sendMessage(message: message)
-        
-        _interactionInterface?.updageWidget(widgetId: (message?.id)!, withModel: newModel)
+        if let message = message {
+            let model = message.widgetModel as! Model
+            let newModel = Model()
+            newModel.value = (model.value ?? 0) + 1
+            _interactionInterface?.updageWidget(widget:message, withModel: newModel)
+        }
     }
  
     // MARK: - ChannelWidgetPresenting
