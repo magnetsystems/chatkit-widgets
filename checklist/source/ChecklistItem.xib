@@ -14,15 +14,20 @@
             <rect key="frame" x="0.0" y="0.0" width="317" height="34"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="checkmark_icon.png" translatesAutoresizingMaskIntoConstraints="NO" id="QjZ-0P-xKr">
+                    <rect key="frame" x="16" y="0.0" width="46" height="34"/>
+                </imageView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AKt-uI-Xwk">
                     <rect key="frame" x="16" y="2" width="46" height="30"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="46" id="NNS-IN-RhR"/>
                         <constraint firstAttribute="height" constant="30" id="jW7-Ho-QKX"/>
                     </constraints>
-                    <state key="normal" title="Button"/>
+                    <connections>
+                        <action selector="checkmarkTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="FSq-vg-yde"/>
+                    </connections>
                 </button>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oTs-cC-Za4">
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Item Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oTs-cC-Za4">
                     <rect key="frame" x="70" y="7" width="231" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <nil key="textColor"/>
@@ -32,16 +37,27 @@
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="oTs-cC-Za4" secondAttribute="trailing" constant="16" id="1pA-T3-xxw"/>
+                <constraint firstItem="oTs-cC-Za4" firstAttribute="leading" secondItem="QjZ-0P-xKr" secondAttribute="trailing" constant="8" id="Aci-C1-jZx"/>
+                <constraint firstAttribute="bottom" secondItem="QjZ-0P-xKr" secondAttribute="bottom" id="GLE-FO-yLg"/>
+                <constraint firstItem="QjZ-0P-xKr" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="PxR-PC-KxB"/>
                 <constraint firstItem="oTs-cC-Za4" firstAttribute="leading" secondItem="AKt-uI-Xwk" secondAttribute="trailing" constant="8" id="Q9R-Ia-854"/>
                 <constraint firstAttribute="bottom" secondItem="AKt-uI-Xwk" secondAttribute="bottom" constant="2" id="f04-je-BUb"/>
                 <constraint firstItem="AKt-uI-Xwk" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="hgE-qN-vz6"/>
+                <constraint firstItem="QjZ-0P-xKr" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="q6H-bj-PF7"/>
                 <constraint firstItem="oTs-cC-Za4" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="wLV-11-e8P"/>
                 <constraint firstItem="AKt-uI-Xwk" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="2" id="yJb-mK-RAf"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <nil key="simulatedTopBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="4.5" y="-262"/>
+            <connections>
+                <outlet property="imageView" destination="QjZ-0P-xKr" id="3Z8-6Y-WAC"/>
+                <outlet property="titleView" destination="oTs-cC-Za4" id="ZUe-Vb-PGl"/>
+            </connections>
+            <point key="canvasLocation" x="4.5" y="-287"/>
         </view>
     </objects>
+    <resources>
+        <image name="checkmark_icon.png" width="256" height="256"/>
+    </resources>
 </document>

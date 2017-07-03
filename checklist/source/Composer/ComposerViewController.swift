@@ -7,17 +7,17 @@
 //
 
 import UIKit
-import ChatKit
+import WidgetKit
 
 class ComposerViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet var tableView: UITableView!
-    var send:((Message) -> ())?
-    var cancel:(() -> ())?
+    private var _send:((WidgetModel) -> ())?
+    private var _cancel:(() -> ())?
     
-    init(send: @escaping (Message) -> (), cancel: @escaping () -> ()) {
-        self.send = send
-        self.cancel = cancel
+    init(send: @escaping (WidgetModel) -> (), cancel: @escaping () -> ()) {
+        _send = send
+        _cancel = cancel
         super.init(nibName: nil, bundle: nil);
     }
     
@@ -38,15 +38,15 @@ class ComposerViewController: UIViewController, UITableViewDelegate, UITableView
     
     func sendMessage() {
         self.navigationController?.dismiss(animated: true, completion: nil);
-        if let send = send {
-            let message = Model(json:["text":"test"])
-            send(message)
+        if let send = _send {
+            let model = Model()
+            send(model)
         }
     }
     
     func cancelAndDismiss() {
         self.navigationController?.dismiss(animated: true, completion: nil);
-        if let cancel = cancel {
+        if let cancel = _cancel {
             cancel()
         }
     }
@@ -58,6 +58,7 @@ class ComposerViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return UITableViewCell()
     }
+
     /*
     // MARK: - Navigation
 

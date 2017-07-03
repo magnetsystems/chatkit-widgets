@@ -7,11 +7,26 @@
 //
 
 import UIKit
-import ChatKit
+import WidgetKit
 
-class Model: WidgetModel {
+public class Model: WidgetModel {
+    public var items:[Bool] = []
+
+    override public var contentJson: [String : Any] {
+        get {
+            var json = super.contentJson
+            json["items"] = items
+            return json
+        }
+    }
+
     required public init(json:[String:Any]) {
         super.init(json: json)
-        widgetName = "Checklist"
+        items = json["items"] as? [Bool] ?? []
+    }
+
+    required public init() {
+        super.init(name:"Checklist")
+        items = [true, false, false]
     }
 }

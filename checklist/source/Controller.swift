@@ -8,75 +8,93 @@
 //
 
 import UIKit
-import ChatKit
-import HTMLWidget
+import WidgetKit
 
 let label = UILabel()
 
-public class Controller: NSObject, ChatKit.WidgetControlling, ChecklistViewDelegate {
+//@objc public protocol ControllerDelegate : NSObjectProtocol {
+//    func checklistView(checklistView:ChecklistView, didTapItemAtIndex index:Int, updateMessage message:WidgetMessage);
+//}
 
-    // MARK: - Private Properties
-    var _messageInterface:MessageInterface?
+public class Controller: WidgetControllerBase, WidgetKit.ChannelWidgetCreating, WidgetKit.ChannelWidgetPresenting, ChecklistViewDelegate, FlatSurfaceWidgetPresenting {
     
-    // MARK: - Properties
-    public var name = "Checklist"
-    public var modelType: WidgetModel.Type = Model.self
-    
-    // MARK: - Public Functions
-    public func channelView() -> UIView {
-        let view = ChecklistView.checklistView()
-        view.delegate = self
-        return view
-    }
-    
-    public func configureWithMessageInterface(messageInterface:MessageInterface) {
-        _messageInterface = messageInterface
+    public override init() {
+        super.init()
+        name = "Checklist"
+        modelType = Model.self
+
+        registerPresenter(presenter: self, forSurface:WidgetKit.WidgetSurface.Channel.rawValue)
+        registerPresenter(presenter: self, forSurface:WidgetKit.WidgetSurface.Creator.rawValue)
+        registerPresenter(presenter: self, forSurface:WidgetKit.WidgetSurface.Flat.rawValue)
     }
 
-    public func channelViewPresentation() -> WidgetChannelPresentation {
+    // MARK: - ChannelWidgetPresenting
+    
+    public func widgetViewPresentation() -> WidgetChannelPresentation {
         return WidgetChannelPresentation.Cell
     }
-    
-    func widgetPresenterForSurface(surface:Protocol) -> AnyObject {
-        return self
+
+    public func widgetView() -> UIView {
+        let view : ChecklistView? = UINib(nibName: "ChecklistView", bundle: Bundle(for: self.classForCoder)).instantiate(withOwner: nil, options: nil).first as! ChecklistView?
+        return view!
     }
-    
-    public func configureChannelView(channelView:UIView, withMessage message:Message, presentingNavigationController navigationController:UINavigationController?) {
-        let message = message as! Model
-        
-        let oTextView = channelView as? UILabel
-        guard let textView = oTextView else {
-            return;
-        }
-        textView.text = (message.contentJson["text"] != nil) ? (message.contentJson["text"] as? String): ""
+ 
+    public func configureWidgetView(widgetView:UIView, withMessage message:WidgetMessage, presentingNavigationController navigationController:UINavigationController?) {
+        let view = widgetView as! ChecklistView
+        let model = message.widgetModel as? Model
+        view.configure(message: message)
+
+        view.frame = CGRect(x: 0, y: 0, width: 200, height: 13 + 49 + 34 * (model?.items.count)!)
+        view.delegate = self
     }
 
-    public func updateChannelView(channelView:UIView, withData data:[String:Any]) {
-        let oTextView = channelView as? UILabel
-        guard let textView = oTextView else {
-            return;
-        }
-        
-        textView.text = (data["text"] != nil) ? (data["text"] as? String): ""
+    public func widgetViewSizeForMessage( message:WidgetMessage ) -> CGSize {
+        let model = message.widgetModel as? Model
+        return CGSize(width: 100, height: 13 + 49 + 34 * (model?.items.count)!)
     }
-    
-    public func channelViewSizeForMessage(message: Message) -> CGSize {
-        let message = message as! Model
-        
-        return CGSize(width: 300, height: 49+34*3+23)
+
+    public func containerCellTypeForMessage( message:WidgetMessage ) -> WidgetContainerCell.Type {
+        return WidgetContainerCell.self
     }
-    
-    public func composerViewControllerWith(send: @escaping (Message) -> (), cancel:  @escaping () -> ()) -> UIViewController {
-        let composerViewController:ComposerViewController = UIStoryboard(name: "Composer", bundle: Bundle(for: Controller.self)).instantiateInitialViewController() as! ComposerViewController
-        composerViewController.send = send
-        composerViewController.cancel = cancel
-        let navController = UINavigationController(rootViewController: composerViewController)
+
+    // MARK: - ChannelWidgetCreating
+
+    public func composerViewControllerWith(send: @escaping (WidgetModel) -> (), cancel: @escaping () -> ()) -> UIViewController {
+        let navController = UINavigationController(rootViewController: ComposerViewController(send: send, cancel: cancel))
         return navController
     }
-    // MARK: - ChecklistView Delegate
-    
-    func checklistView(checklistView:ChecklistView, didTapItemAtIndex index:Int) {
-        _messageInterface?.sendMessage(message: HTMLWidget.Model(json:["":""]))
+
+    public var composerTitle:String {
+        get {
+            return "Checklist"
+        }
     }
 
+    // MARK: - ChecklistViewDelegate
+
+    func checklistView(checklistView:ChecklistView, didTapItemAtIndex index:Int, updateMessage message:WidgetMessage?) {
+        let model = checklistView.model
+        var items = (model?.items)!
+        items[index] = !(items[index])
+        model?.items = items
+        if message != nil {
+            interactionInterface?.updageWidget(widget: message!, withModel: model!)
+        }
+    }
+
+    // MARK: - FlatSurfaceWidgetPresenting
+
+    public func configureWidgetView(widgetView:UIView, withModel model:WidgetModel, presentingNavigationController navigationController:UINavigationController?) {
+        let view = widgetView as! ChecklistView
+
+        let model:Model? = model as? Model
+        view.configureWithModel(model: model!)
+        view.frame = CGRect(x: 0, y: 0, width: 200, height: 13 + 49 + 34 * (model?.items.count)!)
+        view.delegate = self
+    }
+
+    public func widgetViewSizeForModel( model:WidgetModel ) -> CGSize {
+        let model:Model? = model as? Model
+        return CGSize(width: 200, height: 13 + 49 + 34 * (model?.items.count)!)
+    }
 }

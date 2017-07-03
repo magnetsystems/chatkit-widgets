@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import ChatKit
+import WidgetKit
 
 class ChecklistMessage: Message {
     required init(json: [String : Any]) {

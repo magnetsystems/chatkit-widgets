@@ -35,7 +35,11 @@ class ChannelView: UIView {
 
     func configure(message:WidgetMessage) {
         _message = message
-        let model = message.widgetModel as! Model
+        configureWithModel(model: message.widgetModel)
+    }
+
+    func configureWithModel(model:WidgetModel) {
+        let model = model as! Model
         button.setTitle("Increase: \(model.value)", for: UIControlState.normal)
     }
 

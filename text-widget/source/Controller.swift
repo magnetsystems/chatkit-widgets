@@ -12,19 +12,15 @@ import WidgetKit
 
 let label = UILabel()
 
-public class Controller: WidgetControllerBase, WidgetKit.ChannelWidgetPresenting {
-    
-    var _interactionInterface: WidgetInteractionInterface?
-    
-    override public func configureWithInteractionInterface(interactionInterface:WidgetInteractionInterface) {
-        _interactionInterface = interactionInterface
-    }
+public class Controller: WidgetControllerBase, ChannelWidgetPresenting, FlatSurfaceWidgetPresenting {
 
     public override init() {
         super.init()
         name = "TextWidget"
         modelType = Model.self
+
         registerPresenter(presenter: self, forSurface:WidgetKit.WidgetSurface.Channel.rawValue)
+        registerPresenter(presenter: self, forSurface:WidgetKit.WidgetSurface.Flat.rawValue)
     }
 
     // MARK: - ChannelWidgetPresenting
@@ -64,5 +60,18 @@ public class Controller: WidgetControllerBase, WidgetKit.ChannelWidgetPresenting
 
     public func containerCellTypeForMessage( message:WidgetMessage ) -> WidgetContainerCell.Type {
         return WidgetContainerCell.self
+    }
+    
+    // MARK: - FlatSurfaceWidgetPresenting
+    
+    public func configureWidgetView(widgetView:UIView, withModel model:WidgetModel, presentingNavigationController navigationController:UINavigationController?) {
+        let model:Model? = model as? Model
+    }
+    
+    public func widgetViewSizeForModel( model:WidgetModel ) -> CGSize {
+        let model:Model? = model as? Model
+        let text:NSString = (model?.text ?? "") as NSString
+        let size = text.size(attributes: [NSFontAttributeName : UIFont.systemFont(ofSize: 14.0)])
+        return CGSize(width: size.width + 10, height: size.height + 10)
     }
 }

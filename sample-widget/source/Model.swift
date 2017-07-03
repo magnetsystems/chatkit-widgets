@@ -9,10 +9,10 @@
 import UIKit
 import WidgetKit
 
-class Model: WidgetModel {
-    var value:Int = 0
+public class Model: WidgetModel {
+    public var value:Int = 0
     
-    override var contentJson: [String : Any] {
+    override public var contentJson: [String : Any] {
         get {
             var json = super.contentJson
             json["value"] = value
