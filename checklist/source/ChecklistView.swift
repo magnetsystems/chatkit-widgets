@@ -17,7 +17,7 @@ protocol ChecklistViewDelegate {
 class ChecklistView: UIView {
 
     private var _message:WidgetMessage?
-    public private(set) var model:Model?
+    public var model:Model?
     var delegate: ChecklistViewDelegate!
     @IBOutlet var title: UILabel!
     @IBOutlet var stack: UIStackView!
@@ -45,7 +45,7 @@ class ChecklistView: UIView {
             stack.removeArrangedSubview(view)
         }
         
-        self.model = model as! Model
+        self.model = message.widgetModel as? Model
         let count = self.model?.items.count as! Int
         for index in 0..<count {
             let item = self.model?.items[index]
