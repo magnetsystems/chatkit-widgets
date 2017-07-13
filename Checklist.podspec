@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
   s.author             =  { 'Magnet Systems, Inc.' => 'support@magnet.com' }
   s.source             =  { :git => 'https://github.com/magnetsystems/chatkit-widets.git', :branch => "release-3.1.0" }
   s.platform = :ios
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '9.0'
   s.requires_arc = true
 
   s.resources = ['checklist/source/**/*.{xib,storyboard,bundle,png,xcdatamodeld}']

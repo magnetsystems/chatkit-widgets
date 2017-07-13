@@ -14,7 +14,7 @@ public class Controller: WidgetControllerBase, WidgetKit.ChannelWidgetCreating, 
 
     var _interactionInterface: WidgetInteractionInterface?
     
-    override public func configureWithInteractionInterface(interactionInterface:WidgetInteractionInterface) {
+    override public func configureWithInteractionInterface(interface interactionInterface:WidgetInteractionInterface) {
         _interactionInterface = interactionInterface
     }
 
